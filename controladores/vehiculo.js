@@ -40,7 +40,7 @@ const eliminarVehiculo = async (req, res) => {
         if (!deletedVehiculo) {
             return res.status(404);
         }
-        res.status(200);
+        res.status(200).json(deletedVehiculo);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
