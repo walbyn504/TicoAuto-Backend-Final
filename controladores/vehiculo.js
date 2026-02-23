@@ -5,7 +5,7 @@ const crearVehiculo = async (req, res) => {
         const vehiculo = new Vehiculo({
             marca: req.body.marca,
             modelo: req.body.modelo,
-            anio: req.body.anio,
+            anno: req.body.anno,
             precio: req.body.precio
         });
 
