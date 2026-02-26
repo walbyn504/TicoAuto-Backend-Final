@@ -4,6 +4,6 @@ const router = express.Router();
 const { registrarUsuario } = require('../controladores/autenticacion');
 
 // Ruta para registrar un nuevo usuario
-router.post('/registrar', registrarUsuario);
+router.post('/autenticacion', registrarUsuario);
 
 module.exports = router;
