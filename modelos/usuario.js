@@ -25,6 +25,11 @@ const usuarioSchema = new mongoose.Schema({
     contrasenna: {
         type: String,
         required: true
+    },
+
+    token: {
+        type: String,
+        required: false
     }
 });
 
