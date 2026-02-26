@@ -15,14 +15,14 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    
-    email: {
+
+    correo: {
         type: String,
         required: true,
         unique: true
     },
 
-    password: {
+    contrasenna: {
         type: String,
         required: true
     }

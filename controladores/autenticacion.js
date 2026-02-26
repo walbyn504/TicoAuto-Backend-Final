@@ -2,25 +2,25 @@ const usuario = require('../modelos/usuario');
 const bcrypt = require('bcrypt');
 
 const registrarUsuario = async (req, res) => {
-    const { nombre, primerApellido, segundoApellido, email, password } = req.body;
+    const { nombre, primerApellido, segundoApellido, correo, contrasenna } = req.body;
 
     try {
-        // Verificar si el email ya está registrado
-        const usuarioExistente = await usuario.findOne({ email });
+        // Verificar si el correo ya está registrado
+        const usuarioExistente = await usuario.findOne({ correo });
         if (usuarioExistente) {
             return res.status(400).json({ message: "El correo electrónico ya está registrado." });
         }
 
         // Encriptar la contraseña
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedContrasenna = await bcrypt.hash(contrasenna, 10);
 
         // Crear nuevo usuario
         const nuevoUsuario = new usuario({
             nombre,
             primerApellido,
             segundoApellido,
-            email,
-            password: hashedPassword
+            correo,
+            contrasenna: hashedContrasenna
         });
 
         // Guardar el nuevo usuario en la BD
