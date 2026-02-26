@@ -41,14 +41,20 @@ const generarToken = async (req, res) => {
 
     try {
         // Buscar el usuario por correo
-        const usuarioEncontrado = await usuario.findOne({ correo });
+    const usuarioEncontrado = await usuario.findOne({ correo });
 
-        if (!usuarioEncontrado || usuarioEncontrado.contrasenna !== contrasenna) {
-            return res.status(401).json({ message: "Correo o contraseña incorrectos." });
-        }
-        // 
+    if (!usuarioEncontrado) {
+        return res.status(401).json({ message: "Correo o contraseña incorrectos." });
+    }
+
+    const esValida = await bcrypt.compare(contrasenna, usuarioEncontrado.contrasenna);
+
+    if (!esValida) {
+        return res.status(401).json({ message: "Correo o contraseña incorrectos." });
+    }
+        // Generar un token (en este caso, simplemente un hash del correo y contraseña)
         const token = await bcrypt.hash(correo + contrasenna, 10);
-        
+
         // Guardar el token en la base de datos
         usuarioEncontrado.token = token;
         await usuarioEncontrado.save();
