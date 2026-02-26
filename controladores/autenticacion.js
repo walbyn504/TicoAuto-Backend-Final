@@ -40,7 +40,7 @@ const generarToken = async (req, res) => {
     }
 
     try {
-        const usuario = await Usuario.findOne({ correo });
+        const usuario = await usuario.findOne({ correo });
 
         if (!usuario || usuario.contrasenna !== contrasenna) {
             return res.status(401).json({ message: "Correo o contraseña incorrectos." });
@@ -55,8 +55,29 @@ const generarToken = async (req, res) => {
     }
 };
 
+const verificarToken = async (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Assuming Bearer token format
+
+    if (!token) {
+        return res.status(401).json({ message: "Token no proporcionado." });
+    }
+
+    try {
+        const usuarioEncontrado = await usuario.findOne({ token });
+        if (!usuarioEncontrado) {
+            return res.status(401).json({ message: "Token inválido." });
+        }
+        req.usuario = usuarioEncontrado;
+        // Continuar con la siguiente función de middleware o ruta
+        next();
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
 
 module.exports = {
     registrarUsuario,
-    generarToken
+    generarToken,
+    verificarToken
 };
