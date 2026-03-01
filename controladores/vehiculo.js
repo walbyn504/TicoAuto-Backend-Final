@@ -6,7 +6,8 @@ const crearVehiculo = async (req, res) => {
             marca: req.body.marca,
             modelo: req.body.modelo,
             anno: req.body.anno,
-            precio: req.body.precio
+            precio: req.body.precio,
+            usuario: req.body.usuarioId
         });
 
         // Guardar el vehículo en la BD y retornar el vehículo creado
@@ -32,6 +33,8 @@ const editarVehiculo = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+
 
 const eliminarVehiculo = async (req, res) => {
     try {
