@@ -13,6 +13,7 @@ const crearVehiculo = async (req, res) => {
         // Guardar el vehículo en la BD y retornar el vehículo creado
         const vehiculoCreado = await vehiculo.save();
         res.status(201).json(vehiculoCreado);
+        
 
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -34,6 +35,15 @@ const editarVehiculo = async (req, res) => {
     }
 };
 
+
+const obtenerVehiculos = async (req, res) => {
+    try {
+        const vehiculos = await Vehiculo.find();    
+        res.status(200).json(vehiculos);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }       
+};
 
 
 const eliminarVehiculo = async (req, res) => {
@@ -76,5 +86,6 @@ module.exports = {
     crearVehiculo,
     editarVehiculo,
     eliminarVehiculo,
-    marcarVendido
+    marcarVendido,
+    obtenerVehiculos
 };
