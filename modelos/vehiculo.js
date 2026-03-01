@@ -34,12 +34,11 @@ const vehiculoSchema = new mongoose.Schema({
         default: 'disponible'
     },
 
-    imagen: {
-        type: String
-    },
-
-    // Cada vehículo tiene un usuario (dueño)
-    usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true }
+    usuario: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Usuario', 
+        required: true 
+    }
 
 },
 
