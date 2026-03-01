@@ -3,21 +3,18 @@ const router = express.Router();
 const path = require('path');
 const multer = require('multer');
 
-const { 
-    crearVehiculo,
-    editarVehiculo,
-    obtenerVehiculos,
-    obtenerVehiculoPorId,
-    eliminarVehiculo,
-    marcarVendido,
- } = require("../controladores/vehiculo");
-
+const {marcarVendido,} = require("../controladores/vehiculo");
 const { verificarToken } = require('../controladores/autenticacion');
+const { crearVehiculo } = require('../controladores/vehiculos/crearVehiculo');
+const { editarVehiculo } = require('../controladores/vehiculos/editarVehiculo');
+const { obtenerVehiculos, obtenerVehiculoPorId } = require('../controladores/vehiculos/obtenerVehiculos');
+const { eliminarVehiculo } = require('../controladores/vehiculos/eliminarVehiculo');
 
-
+// Configuración de Multer para manejar la subida de imágenes
 const storage = multer.diskStorage({
+    // Guardar las imágenes en la carpeta "imagenes"
     destination: (req, file, cb) => cb(null, 'imagenes/'),
-    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+    filename: (req, file, cb) => cb(null, file.originalname)
 });
 
 const upload = multer({ storage });
@@ -41,8 +38,3 @@ router.delete('/vehiculo/:id', verificarToken, eliminarVehiculo)
 router.patch('/vehiculo/vendido/:id', verificarToken, marcarVendido);
 
 module.exports = router;
-
-
-
-
-
