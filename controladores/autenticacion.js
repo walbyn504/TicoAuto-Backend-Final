@@ -109,6 +109,7 @@ const verificarToken = async (req, res, next) => {
     }
 };
 
+
 module.exports = {
     registrarUsuario,
     generarToken,
