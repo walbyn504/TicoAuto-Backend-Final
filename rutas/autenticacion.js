@@ -10,5 +10,4 @@ router.post('/autenticacion', registrarUsuario);
 
 router.post('/autenticacion/login', generarToken);
 
-
 module.exports = router;
