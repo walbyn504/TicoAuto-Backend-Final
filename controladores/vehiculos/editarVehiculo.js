@@ -1,4 +1,4 @@
-const Vehiculo = require("../../modelos/vehiculo");
+const Vehiculo = require('../../modelos/Vehiculo');
 const fs = require('fs'); 
 
 
