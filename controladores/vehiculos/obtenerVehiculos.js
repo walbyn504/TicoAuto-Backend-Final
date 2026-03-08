@@ -1,3 +1,4 @@
+const usuario = require('../../modelos/usuario');
 const Vehiculo = require('../../modelos/vehiculo');
 
 
@@ -13,7 +14,7 @@ const obtenerVehiculos = async (req, res) => {
 const obtenerVehiculoPorId = async (req, res) => {  
     try {
         const id = req.params.id;
-        const vehiculo = await Vehiculo.findById(id);           
+        const vehiculo = await Vehiculo.findById(id).populate('usuario');           
         if (!vehiculo) {
             return res.status(404);
         }           
