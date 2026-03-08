@@ -5,6 +5,7 @@ const multer = require('multer');
 
 const { marcarVendido } = require("../controladores/vehiculos/marcarVendido");
 const { verificarToken } = require('../controladores/autenticacion');
+const {verificarTokenOpcional} = require ('../controladores/autenticacion');
 const { crearVehiculo } = require('../controladores/vehiculos/crearVehiculo');
 const { editarVehiculo } = require('../controladores/vehiculos/editarVehiculo');
 const { obtenerVehiculos, obtenerVehiculoPorId } = require('../controladores/vehiculos/obtenerVehiculos');
@@ -31,7 +32,7 @@ router.put('/vehiculo/:id', verificarToken, upload.single('imagen'), editarVehic
 router.get('/vehiculos', obtenerVehiculos);
 
 // Obtener un vehículo por ID
-router.get('/vehiculo/:id', verificarToken, obtenerVehiculoPorId);
+router.get('/vehiculo/:id', verificarTokenOpcional, obtenerVehiculoPorId);
 
 // Eliminar un vehículo existente
 router.delete('/vehiculo/:id', verificarToken, eliminarVehiculo);
@@ -40,6 +41,6 @@ router.delete('/vehiculo/:id', verificarToken, eliminarVehiculo);
 router.patch('/vehiculo/vendido/:id', verificarToken, marcarVendido);
 
 // Filtro de vehículos 
-router.get('/vehiculos/filtro', verificarToken, filtroVehiculos);
+router.get('/vehiculos/filtro', filtroVehiculos);
 
 module.exports = router;
