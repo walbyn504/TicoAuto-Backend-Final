@@ -40,6 +40,24 @@ const obtenerVehiculoPorId = async (req, res) => {
     }
 };
 
+
+const obtenerMisVehiculos = async (req, res) => {
+    try {
+
+        const vehiculos = await Vehiculo.find({
+            usuario: req.usuario.id
+        });
+
+        res.status(200).json(vehiculos);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+      
+
 module.exports = {
-    obtenerVehiculos, obtenerVehiculoPorId
+    obtenerVehiculos, obtenerVehiculoPorId, obtenerMisVehiculos
 };
