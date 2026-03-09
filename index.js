@@ -25,7 +25,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors({
     domains:'*',
-    methods: ['GET', 'POST', 'DELETE', 'PUT'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT','PATCH'],
 }));
 
 //Ruta para acceder a las imágenes
