@@ -34,6 +34,7 @@ app.use('/imagenes', express.static('imagenes'));
 //Rutas
 app.use('/api', require('./rutas/vehiculos'));
 app.use('/api', require('./rutas/autenticacion'));
+app.use('/api', required('./rutas/pregunta'));
 
 //Inicialización del servidor
 app.listen(process.env.PORT, () => {
