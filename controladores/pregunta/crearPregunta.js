@@ -2,37 +2,38 @@ const Pregunta = require("../../modelos/pregunta");
 const Vehiculo = require("../../modelos/vehiculo");
 
 const crearPregunta = async (req, res) => {
+    const { vehiculoId } = req.params;
+    const { pregunta } = req.body;
 
-    const { vehiculo, pregunta } = req.body;
-
-    if (!vehiculo || !pregunta) {
+    if (!vehiculoId || !pregunta) {
         return res.status(400).json({
-            mensaje: "Un vehiculo y una pregunta son requeridos."
+            mensaje: "El id del vehículo y la pregunta son requeridos."
         });
     }
 
     try {
-
-        // Verificar que el vehículo exista
-        const vehiculoEncontrado = await Vehiculo.findById(vehiculo);
+        const vehiculoEncontrado = await Vehiculo.findById(vehiculoId);
 
         if (!vehiculoEncontrado) {
-            return res.status(404);
+            return res.status(404).json({
+                mensaje: "Vehículo no encontrado."
+            });
         }
 
-        // Crear la pregunta
-        const nuevaPregunta = await Pregunta({
-            vehiculo: vehiculo,
-            usuario: req.usuario.id, // usuario que hace la pregunta
+        const nuevaPregunta = new Pregunta({
+            vehiculo: vehiculoId,
+            usuario: req.usuario.id,
             pregunta: pregunta.trim()
         });
 
         const preguntaGuardada = await nuevaPregunta.save();
 
-        return res.status(201).json({preguntaGuardada});
+        return res.status(201).json({
+            mensaje: "Pregunta creada correctamente.",
+            preguntaGuardada
+        });
 
     } catch (error) {
-
         return res.status(500).json({
             mensaje: "Error al crear la pregunta",
             error: error.message
