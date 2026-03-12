@@ -5,7 +5,15 @@ const obtenerMisPreguntas = async (req, res) => {
     try {
         const misPreguntas = await Pregunta.find({
             usuario: req.usuario.id
-        }).populate("vehiculo").sort({ fechaPregunta: -1 });
+        })
+        .populate({
+            path: "vehiculo",
+            populate: {
+                path: "usuario",
+                select: "nombre"
+            }
+        })
+        .sort({ fechaPregunta: -1 });
 
         const resultado = [];
 
