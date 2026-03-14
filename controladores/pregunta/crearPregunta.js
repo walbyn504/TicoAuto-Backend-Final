@@ -1,29 +1,53 @@
 const Pregunta = require("../../modelos/pregunta");
+const Respuesta = require("../../modelos/respuesta");
 const Vehiculo = require("../../modelos/vehiculo");
 
 const crearPregunta = async (req, res) => {
+    const { vehiculoId } = req.params;
+    const { pregunta } = req.body;
 
-    const { vehiculo, pregunta } = req.body;
-
-    if (!vehiculo || !pregunta) {
+    if (!vehiculoId || !pregunta || !pregunta.trim()) {
         return res.status(400).json({
-            mensaje: "Un vehiculo y una pregunta son requeridos."
+            mensaje: "El id del vehículo y la pregunta son requeridos."
         });
     }
 
     try {
-
-        // Verificar que el vehículo exista
-        const vehiculoEncontrado = await Vehiculo.findById(vehiculo);
+        const vehiculoEncontrado = await Vehiculo.findById(vehiculoId);
 
         if (!vehiculoEncontrado) {
-            return res.status(404);
+            return res.status(404).json({
+                mensaje: "Vehículo no encontrado."
+            });
         }
 
-        // Crear la pregunta
-        const nuevaPregunta = await Pregunta({
-            vehiculo: vehiculo,
-            usuario: req.usuario.id, // usuario que hace la pregunta
+        
+
+        // Buscar la última pregunta que este usuario hizo sobre este vehículo
+        const ultimaPregunta = await Pregunta.findOne({
+            vehiculo: vehiculoId,
+            usuario: req.usuario.id
+        }).sort({ createdAt: -1 }); // Ordena por fecha de creación descendente
+
+
+        // SI hay una pregunta
+        if (ultimaPregunta) {
+            // Busca una respuesta asociada a la última pregunta
+            const respuestaExistente = await Respuesta.findOne({
+                pregunta: ultimaPregunta._id
+            });
+
+            // Si no existe respuesta, pregunta pendiente
+            if (!respuestaExistente) {
+                return res.status(400).json({
+                    mensaje: "No puedes enviar otra pregunta hasta que la anterior tenga respuesta."
+                });
+            }
+        }
+
+        const nuevaPregunta = new Pregunta({
+            vehiculo: vehiculoId,
+            usuario: req.usuario.id,
             pregunta: pregunta.trim()
         });
 
@@ -32,7 +56,6 @@ const crearPregunta = async (req, res) => {
         return res.status(201).json({preguntaGuardada});
 
     } catch (error) {
-
         return res.status(500).json({
             mensaje: "Error al crear la pregunta",
             error: error.message
