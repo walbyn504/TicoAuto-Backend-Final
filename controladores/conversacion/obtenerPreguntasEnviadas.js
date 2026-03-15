@@ -6,6 +6,7 @@ const obtenerMisPreguntas = async (req, res) => {
         const misPreguntas = await Pregunta.find({
             usuario: req.usuario.id
         })
+        .populate("usuario", "nombre")
         .populate({
             path: "vehiculo",
             populate: {
