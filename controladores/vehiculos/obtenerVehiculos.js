@@ -37,7 +37,8 @@ const obtenerMisVehiculos = async (req, res) => {
     try {
 
         const vehiculos = await Vehiculo.find({
-            usuario: req.usuario.id
+            usuario: req.usuario.id,
+            estado: 'disponible'
         });
 
         res.status(200).json(vehiculos);
