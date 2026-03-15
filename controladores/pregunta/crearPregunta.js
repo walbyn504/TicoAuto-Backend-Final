@@ -6,6 +6,12 @@ const crearPregunta = async (req, res) => {
     const { vehiculoId } = req.params;
     const { pregunta } = req.body;
 
+    if (!req.usuario) {
+        return res.status(401).json({
+            mensaje: "Usuario no autenticado."
+        });
+    }
+
     if (!vehiculoId || !pregunta || !pregunta.trim()) {
         return res.status(400).json({
             mensaje: "El id del vehículo y la pregunta son requeridos."
@@ -21,23 +27,28 @@ const crearPregunta = async (req, res) => {
             });
         }
 
-        
+        // El dueño no puede preguntarse a sí mismo
+        if (vehiculoEncontrado.usuario.toString() === req.usuario.id) {
+            return res.status(403).json({
+                mensaje: "No puedes enviar preguntas a tu propio vehículo."
+            });
+        }
 
-        // Buscar la última pregunta que este usuario hizo sobre este vehículo
-        const ultimaPregunta = await Pregunta.findOne({
+        // Busca todas las preguntas de este usuario sobre este vehículo
+        const preguntasUsuario = await Pregunta.find({
             vehiculo: vehiculoId,
             usuario: req.usuario.id
-        }).sort({ createdAt: -1 }); // Ordena por fecha de creación descendente
+        }).select("_id");
 
+        // Recorre cada pregunta y revisa si ya fue respondida
+        for (let i = 0; i < preguntasUsuario.length; i++) {
+            const preguntaActual = preguntasUsuario[i];
 
-        // SI hay una pregunta
-        if (ultimaPregunta) {
-            // Busca una respuesta asociada a la última pregunta
             const respuestaExistente = await Respuesta.findOne({
-                pregunta: ultimaPregunta._id
+                pregunta: preguntaActual._id
             });
 
-            // Si no existe respuesta, pregunta pendiente
+            // Si encuentra una pregunta sin respuesta, bloquea
             if (!respuestaExistente) {
                 return res.status(400).json({
                     mensaje: "No puedes enviar otra pregunta hasta que la anterior tenga respuesta."
@@ -53,7 +64,9 @@ const crearPregunta = async (req, res) => {
 
         const preguntaGuardada = await nuevaPregunta.save();
 
-        return res.status(201).json({preguntaGuardada});
+        return res.status(201).json({
+            pregunta: preguntaGuardada
+        });
 
     } catch (error) {
         return res.status(500).json({
