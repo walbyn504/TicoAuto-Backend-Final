@@ -1,15 +1,22 @@
 const Vehiculo = require('../../modelos/vehiculo');
+const validarFiltroVehiculos = require('../../validaciones/vehiculos/filtroVehiculos');
 
 const filtroVehiculos = async (req, res) => {
   try {
-    const { 
-      marca, modelo, 
-      anno_min, anno_max, 
-      precio_min, precio_max, 
-      estado, page, limit
-    } = req.query;
+    const {marca, modelo, anno_min, anno_max, precio_min, precio_max, estado} = req.query;
 
     const filtro = {};
+
+    // Ejecutar validaciones
+    const validacion = validarFiltroVehiculos(req.query);
+
+    if (validacion.error) {
+      return res.status(400).json({
+        message: validacion.error
+      });
+    }
+
+    const { pagina, limite, annoMinNum, annoMaxNum, precioMinNum, precioMaxNum} = validacion;
 
     if (marca) {
       filtro.marca = {
@@ -27,14 +34,14 @@ const filtroVehiculos = async (req, res) => {
 
     if (anno_min || anno_max) {
       filtro.anno = {};
-      if (anno_min) filtro.anno.$gte = parseInt(anno_min);
-      if (anno_max) filtro.anno.$lte = parseInt(anno_max);
+      if (anno_min) filtro.anno.$gte = annoMinNum;
+      if (anno_max) filtro.anno.$lte = annoMaxNum;
     }
 
     if (precio_min || precio_max) {
       filtro.precio = {};
-      if (precio_min) filtro.precio.$gte = parseInt(precio_min); //mayor igual que
-      if (precio_max) filtro.precio.$lte = parseInt(precio_max); //menor igual que
+      if (precio_min) filtro.precio.$gte = precioMinNum;
+      if (precio_max) filtro.precio.$lte = precioMaxNum;
     }
 
     if (estado) {
@@ -44,15 +51,9 @@ const filtroVehiculos = async (req, res) => {
       };
     }
 
-    const pagina = parseInt(page);
-    const limite = parseInt(limit);
-
-    // Calcula cuántos registros se deben pasar (paginación)
-    const skip = (pagina - 1) * limite; 
+    const skip = (pagina - 1) * limite;
 
     const totalVehiculos = await Vehiculo.countDocuments(filtro);
-    
-    // Calcula el total de páginas según el número de vehículos y el límite por página
     const totalPaginas = Math.ceil(totalVehiculos / limite);
 
     const vehiculos = await Vehiculo
