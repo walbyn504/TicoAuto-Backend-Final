@@ -5,9 +5,9 @@ const { verificarToken } = require('../controladores/autenticacion/verificarToke
 const obtenerPreguntasEnviadas = require('../controladores/conversacion/obtenerPreguntasEnviadas');
 const obtenerPreguntasVehiculos = require('../controladores/conversacion/obtenerPreguntasVehiculos');
 
-router.get('/pregunta/enviadas', verificarToken, obtenerPreguntasEnviadas);
+router.get('/preguntas/enviadas', verificarToken, obtenerPreguntasEnviadas);
 
-router.get('/pregunta/recibidas', verificarToken, obtenerPreguntasVehiculos);
+router.get('/preguntas/recibidas', verificarToken, obtenerPreguntasVehiculos);
 
 
 module.exports = router;
