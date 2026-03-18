@@ -59,7 +59,10 @@ const crearPregunta = async (req, res) => {
 
         const preguntaGuardada = await nuevaPregunta.save();
 
-        res.status(201).json(preguntaGuardada);
+        res
+            .status(201)
+            .location(`/api/preguntas/${preguntaGuardada._id}`)
+            .json(preguntaGuardada);
 
     } catch (error) {
         return res.status(500).json({
