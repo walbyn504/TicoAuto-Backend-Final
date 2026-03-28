@@ -42,7 +42,7 @@ const verificarToken = (req, res, next) => {
     }
 };
 
-const verificarTokenOpcional = (req, res, next) => {
+const verificarTokenOpcional = (req, _res, next) => {
 
     if (!SECRET_KEY) {
         req.usuario = null;
