@@ -1,4 +1,3 @@
-const usuario = require('../../modelos/usuario');
 const Vehiculo = require('../../modelos/vehiculo');
 
 const obtenerVehiculoPorId = async (req, res) => {
