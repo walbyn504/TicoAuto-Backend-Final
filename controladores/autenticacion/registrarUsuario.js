@@ -1,6 +1,6 @@
-
 const usuario = require('../../modelos/usuario');
 const bcrypt = require('bcrypt');
+const { consultarCedula } = require('../../servicios/padronServicio');
 
 const validarContrasenna = (contrasenna) => {
     const tieneMin = /[a-z]/.test(contrasenna);
@@ -12,17 +12,19 @@ const validarContrasenna = (contrasenna) => {
     return tieneMin && tieneMay && tieneNumero && tieneEspecial && largoMinimo;
 };
 
-const validarDatosRegistro = ({ nombre, primerApellido, segundoApellido, telefono, 
-                              correo, contrasenna }) => {
+const validarDatosRegistro = ({ cedula, telefono, correo, contrasenna }) => {
     if (
-        !nombre || !nombre.trim() ||
-        !primerApellido || !primerApellido.trim() ||
-        !segundoApellido || !segundoApellido.trim() ||
+        !cedula || !cedula.trim() ||
         !telefono || !telefono.trim() ||
         !correo || !correo.trim() ||
         !contrasenna || !contrasenna.trim()
     ) {
         return "Todos los campos son obligatorios.";
+    }
+
+    const regexCedula = /^\d{9}$/;
+    if (!regexCedula.test(cedula.trim())) {
+        return "La cédula debe tener exactamente 9 dígitos.";
     }
 
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,9 +33,8 @@ const validarDatosRegistro = ({ nombre, primerApellido, segundoApellido, telefon
     }
 
     const regexTelefono = /^[0-9]{8,}$/;
-    if (!regexTelefono.test(telefono)) {
-        alert("El teléfono debe tener al menos 8 dígitos");
-        return;
+    if (!regexTelefono.test(telefono.trim())) {
+        return "El teléfono debe tener al menos 8 dígitos.";
     }
 
     if (!validarContrasenna(contrasenna.trim())) {
@@ -44,13 +45,11 @@ const validarDatosRegistro = ({ nombre, primerApellido, segundoApellido, telefon
 };
 
 const registrarUsuario = async (req, res) => {
-    const { nombre, primerApellido, segundoApellido, telefono, correo, contrasenna } = req.body;
+    const { cedula, telefono, correo, contrasenna } = req.body;
 
     try {
         const errorValidacion = validarDatosRegistro({
-            nombre,
-            primerApellido,
-            segundoApellido,
+            cedula,
             telefono,
             correo,
             contrasenna
@@ -62,19 +61,41 @@ const registrarUsuario = async (req, res) => {
             });
         }
 
-        const usuarioExistente = await usuario.findOne({ correo: correo.trim().toLowerCase() });
-        if (usuarioExistente) {
+        const persona = await consultarCedula(cedula.trim());
+
+        if (!persona) {
+            return res.status(400).json({
+                message: "La cédula no existe en el padrón."
+            });
+        }
+
+        const usuarioExistenteCorreo = await usuario.findOne({ 
+            correo: correo.trim().toLowerCase() 
+        });
+
+        if (usuarioExistenteCorreo) {
             return res.status(400).json({
                 message: "El correo electrónico ya está registrado."
+            });
+        }
+
+        const usuarioExistenteCedula = await usuario.findOne({
+            cedula: cedula.trim()
+        });
+
+        if (usuarioExistenteCedula) {
+            return res.status(400).json({
+                message: "La cédula ya está registrada."
             });
         }
 
         const hashedContrasenna = await bcrypt.hash(contrasenna.trim(), 10);
 
         const nuevoUsuario = new usuario({
-            nombre: nombre.trim(),
-            primerApellido: primerApellido.trim(),
-            segundoApellido: segundoApellido.trim(),
+            cedula: cedula.trim(),
+            nombre: persona.nombre,
+            primerApellido: persona.apellidoPaterno,
+            segundoApellido: persona.apellidoMaterno,
             telefono: telefono.trim(),
             correo: correo.trim().toLowerCase(),
             contrasenna: hashedContrasenna
@@ -86,7 +107,7 @@ const registrarUsuario = async (req, res) => {
             .status(201)
             .location(`/api/autenticacion/${usuarioGuardado._id}`)
             .json(usuarioGuardado);
-            
+
     } catch (error) {
         return res.status(500).json({
             message: error.message
