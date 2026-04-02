@@ -6,7 +6,9 @@ const verificarCorreo = async (req, res) => {
         const { token } = req.query;
 
         if (!token) {
-            return res.json({ ok: false });
+            return res.status(400).json({
+                message: "Token requerido."
+            });
         }
 
         const hashedToken = crypto
@@ -19,7 +21,15 @@ const verificarCorreo = async (req, res) => {
         });
 
         if (!usuarioEncontrado) {
-            return res.json({ ok: false });
+            return res.status(404).json({
+                message: "Token inválido o expirado."
+            });
+        }
+
+        if (usuarioEncontrado.estado === 'activo') {
+            return res.status(200).json({
+                message: "El usuario ya está verificado."
+            });
         }
 
         usuarioEncontrado.estado = 'activo';
@@ -27,11 +37,12 @@ const verificarCorreo = async (req, res) => {
 
         await usuarioEncontrado.save();
 
-        return res.json({ ok: true });
+        return res.sendStatus(200);
 
     } catch (error) {
-        console.error(error);
-        return res.json({ ok: false });
+        return res.status(500).json({
+            message: error.message
+        });
     }
 };
 
