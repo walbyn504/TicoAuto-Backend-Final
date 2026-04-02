@@ -24,8 +24,8 @@ const app = express();
 //middleswares
 app.use(bodyParser.json());
 app.use(cors({
-    domains:'*',
-    methods: ['GET', 'POST', 'DELETE', 'PUT','PATCH'],
+    origin: '*',
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH']
 }));
 
 //Ruta para acceder a las imágenes
@@ -38,6 +38,7 @@ app.use('/api', require('./rutas/pregunta'));
 app.use('/api', require('./rutas/respuestas'));
 app.use('/api', require('./rutas/conversacion'));
 app.use('/api', require('./rutas/padron'));
+app.use('/api', require('./rutas/autenticacionGoogle'));
 
 //Inicialización del servidor
 app.listen(process.env.PORT, () => {
