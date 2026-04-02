@@ -1,7 +1,9 @@
 const sgMail = require('@sendgrid/mail');
 
+// Configurar SendGrid con la clave API
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+// Función para enviar correo de verificación
 const enviarCorreoVerificacion = async (correo, nombre, linkVerificacion) => {
     const mensaje = {
         to: correo,
@@ -10,7 +12,7 @@ const enviarCorreoVerificacion = async (correo, nombre, linkVerificacion) => {
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
                 <h2>Hola ${nombre}</h2>
-                <p>Gracias por registrarte en el sistema.</p>
+                <p>Gracias por registrarte en el sistema TicoAuto.</p>
                 <p>Para activar tu cuenta, haz clic en el siguiente botón:</p>
 
                 <p style="text-align: center;">
@@ -19,15 +21,11 @@ const enviarCorreoVerificacion = async (correo, nombre, linkVerificacion) => {
                         Verificar cuenta
                     </a>
                 </p>
-
-                <p>Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
-                <p>${linkVerificacion}</p>
-
-                <p>Este enlace expirará en 24 horas.</p>
             </div>
         `
     };
 
+    // Enviar el correo
     await sgMail.send(mensaje);
 };
 
