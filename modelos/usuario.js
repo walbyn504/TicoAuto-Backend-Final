@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const usuarioSchema = new mongoose.Schema({
 
+const usuarioSchema = new mongoose.Schema({
 
     cedula: {
         type: String,
@@ -23,7 +23,7 @@ const usuarioSchema = new mongoose.Schema({
         required: true
     },
 
-    telefono:{
+    telefono: {
         type: String,
         required: true
     },
@@ -32,12 +32,24 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+        lowercase: true
     },
 
     contrasenna: {
         type: String,
-        required: true
+        default: null
+    },
+
+    googleId: {
+        type: String,
+        default: null
+    },
+
+    proveedor: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local'
     },
 
     estado: {
@@ -45,13 +57,12 @@ const usuarioSchema = new mongoose.Schema({
         enum: ['pendiente', 'activo'],
         default: 'pendiente'
     },
+
     tokenVerificacion: {
         type: String,
         default: null
     }
 
-}, 
-
-{ timestamps: true });
+}, { timestamps: true });
 
 module.exports = mongoose.model('Usuario', usuarioSchema);
