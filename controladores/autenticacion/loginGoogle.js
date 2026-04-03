@@ -25,6 +25,12 @@ const loginGoogle = async (req, res) => {
             });
         }
 
+        if (usuarioEncontrado.estado !== 'activo') {
+            return res.status(403).json({
+                message: "Cuenta no verificada. Revisa tu correo para activarla."
+            });
+        }
+
         const token = jwt.sign(
             {
                 id: usuarioEncontrado._id,
