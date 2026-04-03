@@ -1,27 +1,32 @@
 const { OAuth2Client } = require('google-auth-library');
 
-// ID de cliente (Google Cloud)
-const CLIENT_ID = '817077174471-bt5e6bh7eelg0989ksook2k9m1eu9tbp.apps.googleusercontent.com';
+
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 // Valida tokens de Google
 const client = new OAuth2Client(CLIENT_ID);
 
-// Valida el token recibido
+
 const verificarGoogleToken = async (credential) => {
+    try {
 
-    // Verifica que el token sea válido y pertenezca al CLIENT_ID
-    const ticket = await client.verifyIdToken({
-        idToken: credential,
-        audience: CLIENT_ID
-    });
+        // Verifica que el token sea válido y pertenezca al CLIENT_ID
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: CLIENT_ID
+        });
+        
+        // Extrae los datos del usuario desde el token
+        const payload = ticket.getPayload();
 
-    // Extrae los datos del usuario desde el token
-    const payload = ticket.getPayload();
+        return {
+            correo: payload.email,  // correo del usuario
+            googleId: payload.sub   // ID único de Google
+        };
 
-    return {
-        correo: payload.email,     // correo del usuario
-        googleId: payload.sub      // ID único de Google
-    };
+    } catch (error) {
+        throw new Error('Token de Google inválido');
+    }
 };
 
 module.exports = {
