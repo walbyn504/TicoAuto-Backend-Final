@@ -1,6 +1,6 @@
 const usuario = require('../../modelos/usuario');
 const bcrypt = require('bcrypt');
-const enviarCodigoSMS = require('../../servicios/enviarCodigoSMS');
+const enviarCodigoSMS = require('../../servicios/mensajeServicio');
 
 const generarCodigo2FA = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
