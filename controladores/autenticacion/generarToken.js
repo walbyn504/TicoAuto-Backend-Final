@@ -72,7 +72,13 @@ const generarToken = async (req, res) => {
 
         await usuarioEncontrado.save();
 
-        await enviarCodigoSMS(usuarioEncontrado.telefono, codigo);
+        try {
+            await enviarCodigoSMS(usuarioEncontrado.telefono, codigo);
+        } catch (error) {
+            return res.status(500).json({
+                message: "No se pudo enviar el SMS. Contacte a su administrador."
+            });
+        }
 
         return res.status(200).json({
             requiere2FA: true,
