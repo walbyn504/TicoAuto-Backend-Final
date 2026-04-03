@@ -44,7 +44,8 @@ const generarToken = async (req, res) => {
             {
                 id: usuarioEncontrado._id,
                 nombre: usuarioEncontrado.nombre,
-                correo: usuarioEncontrado.correo
+                correo: usuarioEncontrado.correo,
+                proveedor: usuarioEncontrado.proveedor
             },
             SECRET_KEY,
             { expiresIn: process.env.JWT_EXPIRES }
