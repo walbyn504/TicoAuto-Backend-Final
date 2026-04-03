@@ -1,6 +1,8 @@
 const usuario = require('../../modelos/usuario');
 const { consultarCedula } = require('../../servicios/padronServicio');
 const { verificarGoogleToken } = require('../../utilidades/verificarGoogle');
+const crypto = require('crypto');
+const enviarCorreoVerificacion = require('../../utilidades/enviarCorreo');
 
 const registrarUsuarioGoogle = async (req, res) => {
     const { credential, cedula, telefono } = req.body;
@@ -33,6 +35,10 @@ const registrarUsuarioGoogle = async (req, res) => {
             return res.status(400).json({ message: "Cédula ya registrada" });
         }
 
+         // Generar token de verificación
+        const rawToken = crypto.randomBytes(32).toString('hex');
+        const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+
         // Crear usuario
         const nuevoUsuario = new usuario({
             cedula,
@@ -43,14 +49,25 @@ const registrarUsuarioGoogle = async (req, res) => {
             correo,
             googleId,
             proveedor: 'google',
-            estado: 'activo'
+            estado: 'pendiente',
+            tokenVerificacion: hashedToken
         });
 
-        await nuevoUsuario.save();
+        const usuarioGuardado = await nuevoUsuario.save();
 
-        return res.status(201).json({
-            message: "Usuario registrado con Google"
-        });
+        // Enviar correo de verificación
+        const linkVerificacion = `http://localhost:5500/html/usuario/verificacion.html?token=${encodeURIComponent(rawToken)}`;
+
+        await enviarCorreoVerificacion(
+            usuarioGuardado.correo,
+            usuarioGuardado.nombre,
+            linkVerificacion
+        );
+
+        return res
+            .status(201)
+            .location(`/api/autenticacion/${usuarioGuardado._id}`)
+            .json(usuarioGuardado);
 
     } catch (error) {
         return res.status(500).json({ message: error.message });
