@@ -2,7 +2,7 @@ const usuario = require('../../modelos/usuario');
 const { consultarCedula } = require('../../servicios/padronServicio');
 const { verificarGoogleToken } = require('../../servicios/googleServicio');
 const crypto = require('crypto');
-const enviarCorreoVerificacion = require('../../utilidades/enviarCorreo');
+const enviarCorreoVerificacion = require('../../servicios/correoServicio');
 
 const registrarUsuarioGoogle = async (req, res) => {
     const { credential, cedula, telefono } = req.body;

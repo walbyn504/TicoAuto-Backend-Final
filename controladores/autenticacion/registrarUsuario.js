@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { consultarCedula } = require('../../servicios/padronServicio');
 
-const enviarCorreoVerificacion = require('../../utilidades/enviarCorreo');
+const enviarCorreoVerificacion = require('../../servicios/correoServicio');
 
 const validarContrasenna = (contrasenna) => {
     const tieneMin = /[a-z]/.test(contrasenna);
