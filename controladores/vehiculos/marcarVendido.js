@@ -39,7 +39,7 @@ const marcarVendido = async (req, res) => {
         await vehiculo.save();
 
         res.status(200).json({
-            message: "Vehículo marcado como vendido correctamente",
+            message: "Vehículo marcado como vendido",
             vehiculo
         });
 
