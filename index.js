@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@as-integrations/express5');
 
-const esquema = require('./graphql/esquema');
+const typeDefs = require('./graphql/esquema');
 const resolvers = require('./graphql/resolvers');
 const context = require('./graphql/contexto');
 
@@ -45,7 +45,7 @@ async function iniciarServidor() {
 
         // Servidor Apollo GraphQL
         const apolloServer = new ApolloServer({
-            esquema,
+            typeDefs,
             resolvers
         });
 
