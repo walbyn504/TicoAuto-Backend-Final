@@ -1,37 +1,14 @@
 const gql = String.raw;
+const vehiculoTypeDefs = require('./vehiculos/vehiculo.type.js');
 
-const typeDefs = gql`
-  type Vehiculo {
-    _id: ID!
-    marca: String!
-    modelo: String!
-    anno: Int!
-    precio: Float!
-    estado: String!
-    imagen: String
-    usuario: ID
-  }
 
-  type VehiculosPaginados {
-    vehiculos: [Vehiculo!]!
-    paginaActual: Int!
-    totalPaginas: Int!
-  }
-
+const rootTypeDefs = gql`
   type Query {
-    filtroVehiculos(
-      marca: String
-      modelo: String
-      anno_min: Int
-      anno_max: Int
-      precio_min: Float
-      precio_max: Float
-      estado: String
-      page: Int!
-      limit: Int!
-    ): VehiculosPaginados!
-
+    _empty: String
   }
 `;
 
-module.exports = typeDefs;
+module.exports = [
+    rootTypeDefs,
+    vehiculoTypeDefs
+];
