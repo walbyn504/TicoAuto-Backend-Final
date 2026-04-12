@@ -3,8 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 
 
-const { verificarToken, verificarTokenOpcional } 
-       = require('../controladores/autenticacion/verificarToken');
+const { verificarToken} = require('../controladores/autenticacion/verificarToken');
 
 
 const { crearVehiculo } = require('../controladores/vehiculos/crearVehiculo');

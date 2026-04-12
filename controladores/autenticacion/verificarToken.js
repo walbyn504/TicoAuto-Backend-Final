@@ -42,43 +42,7 @@ const verificarToken = (req, res, next) => {
     }
 };
 
-const verificarTokenOpcional = (req, _res, next) => {
-
-    if (!SECRET_KEY) {
-        req.usuario = null;
-        return next();
-    }
-
-    const authHeader = req.headers['authorization'];
-
-    if (!authHeader) {
-        req.usuario = null;
-        return next();
-    }
-
-    if (!authHeader.startsWith('Bearer ')) {
-        req.usuario = null;
-        return next();
-    }
-
-    const token = authHeader.split(' ')[1];
-
-    if (!token) {
-        req.usuario = null;
-        return next();
-    }
-
-    try {
-        const tokenDescifrado = jwt.verify(token, SECRET_KEY);
-        req.usuario = tokenDescifrado;
-    } catch (error) {
-        req.usuario = null;
-    }
-
-    next();
-};
 
 module.exports = {
     verificarToken,
-    verificarTokenOpcional
 };
