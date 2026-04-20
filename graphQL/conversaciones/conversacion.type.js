@@ -1,24 +1,13 @@
 const gql = String.raw;
 
 const conversacionTypeDefs = gql`
-    type UsuarioConversacion {
-        id: ID!
-        nombre: String!
-    }
-
-    type VehiculoConversacion {
-        id: ID!
-        marca: String!
-        modelo: String!
-        usuario: UsuarioConversacion
-    }
 
     type Pregunta {
         id: ID!
         pregunta: String!
         fechaPregunta: String!
-        usuario: UsuarioConversacion!
-        vehiculo: VehiculoConversacion!
+        usuario: Usuario!
+        vehiculo: Vehiculo!
     }
 
     type Respuesta {

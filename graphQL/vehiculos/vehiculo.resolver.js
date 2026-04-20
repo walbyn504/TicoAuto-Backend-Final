@@ -2,6 +2,15 @@ const Vehiculo = require('../../modelos/vehiculo');
 const validarFiltroVehiculos = require('../../validaciones/vehiculos/filtroVehiculos');
 
 const vehiculoResolvers = {
+
+    Vehiculo: {
+        id: (doc) => String(doc._id)
+    },
+
+    Usuario: {
+        id: (doc) => String(doc._id)
+    },
+
     Query: {
         filtroVehiculos: async (_, args) => {
             try {
@@ -9,7 +18,6 @@ const vehiculoResolvers = {
 
                 if (validacion.error) {
                     throw new Error(validacion.error);
-
                 }
 
                 const {
@@ -88,7 +96,7 @@ const vehiculoResolvers = {
             }
         },
 
-        // Mostrar el detalle del vehículo (público y privado)
+        // Mostrar detalle del vehículo (público y privado).
         obtenerVehiculoPorId: async (_, { id }, contexto) => {
             try {
                 const vehiculo = await Vehiculo.findById(id).populate('usuario');
@@ -103,7 +111,7 @@ const vehiculoResolvers = {
                     usuarioData = vehiculo.usuario;
                 } else {
                     usuarioData = {
-                        nombre: vehiculo.usuario.nombre
+                    nombre: vehiculo.usuario.nombre
                     };
                 }
 
@@ -114,12 +122,11 @@ const vehiculoResolvers = {
 
             } catch (error) {
                 console.error(error);
-                throw new Error('Ha ocurrido un error al obtener la información del vehículo'); 
+                throw new Error('Ha ocurrido un error al obtener la información del vehículo');
             }
         },
 
-
-        // Mostrar la gestión de mis vehículos (solo para el usuario logueado)
+        // Mostrar la gestión de mis vehículos (solo usario logueado).
         obtenerMisVehiculos: async (_, __, contexto) => {
             try {
                 if (!contexto.usuario || !contexto.usuario.id) {
@@ -134,14 +141,12 @@ const vehiculoResolvers = {
                 return vehiculos;
 
             } catch (error) {
-
                 console.error(error);
-                throw new Error('Ha ocurrido un error al obtener sus vehículos'); 
+                throw new Error('Ha ocurrido un error al obtener sus vehículos');
             }
         },
 
-
-        // Obtener la información del vehículo propio para edición
+        // Obtener información de un vehículo propio para edición.
         obtenerVehiculoEdicion: async (_, { id }, contexto) => {
             try {
                 if (!contexto.usuario || !contexto.usuario.id) {

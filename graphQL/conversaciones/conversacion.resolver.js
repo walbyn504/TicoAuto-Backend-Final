@@ -12,16 +12,7 @@ const conversacionResolvers = {
         pregunta: (doc) => String(doc.pregunta),
         usuarioRespuesta: (doc) => String(doc.usuarioRespuesta)
     },
-
-    VehiculoConversacion: {
-        id: (doc) => String(doc._id)
-    },
-
-    UsuarioConversacion: {
-        id: (doc) => String(doc._id)
-    },
     
-
     Query: {
         obtenerMisConversaciones: async (_, __, contexto) => {
             try {

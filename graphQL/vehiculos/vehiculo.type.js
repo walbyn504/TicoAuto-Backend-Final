@@ -2,8 +2,8 @@ const gql = String.raw;
 
 const vehiculoTypeDefs = gql`
   type Usuario {
-    _id: ID
-    nombre: String
+    id: ID!
+    nombre: String!
     primerApellido: String
     segundoApellido: String
     correo: String
@@ -11,7 +11,7 @@ const vehiculoTypeDefs = gql`
   }
 
   type Vehiculo {
-    _id: ID!
+    id: ID!
     marca: String!
     modelo: String!
     anno: Int!
@@ -44,11 +44,9 @@ const vehiculoTypeDefs = gql`
       limit: Int!
     ): VehiculosPaginados!
 
-    obtenerVehiculoPorId(id: ID!): Vehiculo 
-
-    obtenerMisVehiculos: [Vehiculo!]! # Devuelve una lista de vehículos
-
-    obtenerVehiculoEdicion(id: ID!): Vehiculo
+    obtenerVehiculoPorId(id: ID!): Vehiculo
+    obtenerMisVehiculos: [Vehiculo!]! # Devuelve una lista vehículos.
+    obtenerVehiculoEdicion(id: ID!): Vehiculo 
   }
 `;
 
