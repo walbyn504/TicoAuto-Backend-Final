@@ -12,49 +12,47 @@ const conversacionResolvers = {
         pregunta: (doc) => String(doc.pregunta),
         usuarioRespuesta: (doc) => String(doc.usuarioRespuesta)
     },
-    
+
     Query: {
         obtenerMisConversaciones: async (_, __, contexto) => {
             try {
-                if (!contexto.usuario) {
-                    throw new Error("Usuario no autenticado");
-                }
 
-                const userId = contexto.usuario.id || contexto.usuario.usuarioId || contexto.usuario._id;
+                const userId = contexto.usuario?.id;
 
                 if (!userId) {
                     throw new Error("Usuario no autenticado");
                 }
 
-                const preguntas = await Pregunta.find({
+                const misPreguntas = await Pregunta.find({
                     usuario: userId
                 })
-                    .populate("usuario", "nombre primerApellido segundoApellido")
+                    .populate("usuario", "_id nombre")
                     .populate({
                         path: "vehiculo",
                         populate: {
                             path: "usuario",
-                            select: "nombre primerApellido segundoApellido"
+                            select: "_id nombre"
                         }
                     })
                     .sort({ fechaPregunta: -1 });
 
-                const idsPreguntas = preguntas.map((pregunta) => pregunta._id);
+                const resultado = [];
 
-                const respuestas = await Respuesta.find({
-                    pregunta: { $in: idsPreguntas }
-                });
+                for (let i = 0; i < misPreguntas.length; i++) {
+                    const preguntaActual = misPreguntas[i];
 
-                const mapaRespuestas = {};
+                    const respuesta = await Respuesta.findOne({
+                        pregunta: preguntaActual._id
+                    });
 
-                for (let i = 0; i < respuestas.length; i++) {
-                    mapaRespuestas[respuestas[i].pregunta.toString()] = respuestas[i];
+                    resultado.push({
+                        pregunta: preguntaActual,
+                        respuesta: respuesta || null
+                    });
                 }
 
-                return preguntas.map((pregunta) => ({
-                    pregunta,
-                    respuesta: mapaRespuestas[pregunta._id.toString()] || null
-                }));
+                return resultado;
+
             } catch (error) {
                 console.error(error);
                 throw new Error(error.message || "Error al obtener tus conversaciones");
@@ -63,11 +61,8 @@ const conversacionResolvers = {
 
         obtenerConversacionesDeMisVehiculos: async (_, __, contexto) => {
             try {
-                if (!contexto.usuario) {
-                    throw new Error("Usuario no autenticado");
-                }
 
-                const userId = contexto.usuario.id || contexto.usuario.usuarioId || contexto.usuario._id;
+                const userId = contexto.usuario?.id;
 
                 if (!userId) {
                     throw new Error("Usuario no autenticado");
@@ -77,37 +72,43 @@ const conversacionResolvers = {
                     usuario: userId
                 }).select("_id");
 
-                const idsVehiculos = misVehiculos.map((vehiculo) => vehiculo._id);
+                const idsVehiculos = [];
+
+                for (let i = 0; i < misVehiculos.length; i++) {
+                    const vehiculo = misVehiculos[i];
+                    idsVehiculos.push(vehiculo._id);
+                }
 
                 const preguntas = await Pregunta.find({
                     vehiculo: { $in: idsVehiculos }
                 })
-                    .populate("usuario", "nombre primerApellido segundoApellido")
+                    .populate("usuario", "_id nombre primerApellido segundoApellido")
                     .populate({
                         path: "vehiculo",
                         populate: {
                             path: "usuario",
-                            select: "nombre primerApellido segundoApellido"
+                            select: "_id nombre"
                         }
                     })
                     .sort({ fechaPregunta: -1 });
 
-                const idsPreguntas = preguntas.map((pregunta) => pregunta._id);
+                const resultado = [];
 
-                const respuestas = await Respuesta.find({
-                    pregunta: { $in: idsPreguntas }
-                });
+                for (let i = 0; i < preguntas.length; i++) {
+                    const preguntaActual = preguntas[i];
 
-                const mapaRespuestas = {};
+                    const respuesta = await Respuesta.findOne({
+                        pregunta: preguntaActual._id
+                    });
 
-                for (let i = 0; i < respuestas.length; i++) {
-                    mapaRespuestas[respuestas[i].pregunta.toString()] = respuestas[i];
+                    resultado.push({
+                        pregunta: preguntaActual,
+                        respuesta: respuesta || null
+                    });
                 }
 
-                return preguntas.map((pregunta) => ({
-                    pregunta,
-                    respuesta: mapaRespuestas[pregunta._id.toString()] || null
-                }));
+                return resultado;
+
             } catch (error) {
                 console.error(error);
                 throw new Error(error.message || "Error al obtener las conversaciones de tus vehículos");
