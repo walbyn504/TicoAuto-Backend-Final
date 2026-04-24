@@ -1,3 +1,5 @@
+// Modelo de Mongoose para las preguntas realizadas sobre vehículos.
+// Define la estructura de una pregunta, incluyendo el vehículo, el usuario que hizo la pregunta
 const mongoose = require("mongoose");
 
 const preguntaSchema = new mongoose.Schema({

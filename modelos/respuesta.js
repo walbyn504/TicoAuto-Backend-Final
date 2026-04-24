@@ -1,3 +1,5 @@
+// Modelo para las respuestas a preguntas sobre vehiculos
+//Define la estructura de una respuesta, incluyendo el texto de la respuesta...
 const mongoose = require('mongoose');
 
 const respuestaSchema = new mongoose.Schema({

@@ -1,3 +1,4 @@
+// Validar que el usuario autenticado sea el dueño del vehcículo antes de eliminarlo
 const Vehiculo = require('../../modelos/vehiculo');
 const fs = require('fs');
 
@@ -6,14 +7,16 @@ const eliminarVehiculo = async (req, res) => {
         // Obtener el id del vehículo desde los parámetros de la URL
         const id = req.params.id;
 
+        // Verificar que el usuario esté autenticado
         if (!req.usuario) {
             return res.status(401).json({
                 message: "Usuario no autenticado"
             });
         }
 
-        const vehiculo = await Vehiculo.findById(id);
+        const vehiculo = await Vehiculo.findById(id); // Busca el vehículo por su ID 
 
+        // Si no encuentra el vehículo, devuelve mensaje de error
         if (!vehiculo) {
             return res.status(404).json({
                 message: "Vehículo no encontrado"

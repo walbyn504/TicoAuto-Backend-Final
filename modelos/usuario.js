@@ -1,3 +1,5 @@
+//Modelo para los usuarios registrados en el sistema, con información personal,
+// credenciales de autenticación y estado de la cuenta.
 const mongoose = require('mongoose');
 
 const usuarioSchema = new mongoose.Schema({

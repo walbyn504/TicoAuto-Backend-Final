@@ -1,18 +1,22 @@
+// Valida y actualiza un vehículo existente.
+// Solo el dueño del vehículo puede editarlo, y se validan los campos de entrada
 const Vehiculo = require('../../modelos/vehiculo');
 const fs = require('fs');
 
 const editarVehiculo = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req.params.id; // Obtiene el ID del vehcículo de la solicitud
 
+        // Verifica que el usuario esté autenticado
         if (!req.usuario) {
             return res.status(401).json({
                 message: "Usuario no autenticado"
             });
         }
 
-        const vehiculoExistente = await Vehiculo.findById(id);
+        const vehiculoExistente = await Vehiculo.findById(id); // Busca el vehículo por su ID
 
+        // Si no encuentra el vehcículo, devuelve mensaje de error
         if (!vehiculoExistente) {
             return res.status(404).json({
                 message: "Vehículo no encontrado"
@@ -26,6 +30,7 @@ const editarVehiculo = async (req, res) => {
             });
         }
 
+        // Si pasa todas las validaciones, crea el vehículo
         const marca = req.body.marca?.trim();
         const modelo = req.body.modelo?.trim();
         const anno = parseInt(req.body.anno);
@@ -35,24 +40,28 @@ const editarVehiculo = async (req, res) => {
         const transmision = req.body.transmision;
         const condicion = req.body.condicion;
 
+        // Valida que el usuario esté autenticado
         if (!marca || !modelo || !color || !combustible || !transmision || !condicion) {
             return res.status(400).json({
                 message: "Todos los campos son obligatorios"
             });
         }
 
+        // Valida que el año y el precio sean números vçalidos
         if (isNaN(anno) || anno < 0) {
             return res.status(400).json({
                 message: "El año debe ser un número válido mayor o igual a 0"
             });
         }
 
+        // Valida que el precio sea un número válido
         if (isNaN(precio) || precio < 0) {
             return res.status(400).json({
                 message: "El precio debe ser un número válido mayor o igual a 0"
             });
         }
 
+        // Valida que el combustible, la transmisión y la condición sean valores válidos
         const combustiblesValidos = ['Gasolina', 'Disel', 'Gas'];
         const transmisionesValidas = ['Manual', 'Automatico'];
         const condicionesValidas = ['Nuevo', 'Usado'];
@@ -87,15 +96,17 @@ const editarVehiculo = async (req, res) => {
                 }
             }
 
-            body.imagen = req.file.filename;
+            body.imagen = req.file.filename; // Actualiza la imagen
         }
 
         const opciones = { new: true, runValidators: true }; //Valida que se cumpla las reglas del modelo
 
+        // Actualiza el vehículo
         const updatedVehiculo = await Vehiculo.findByIdAndUpdate(
             id, body, opciones
         );
 
+        // Si no encuentra el vehículo; devuelve mensaje de error
         if (!updatedVehiculo) {
             return res.status(404).json({
                 message: "Vehículo no encontrado"

@@ -4,11 +4,8 @@ const multer = require('multer');
 
 
 const { verificarToken} = require('../controladores/autenticacion/verificarToken');
-
-
 const { crearVehiculo } = require('../controladores/vehiculos/crearVehiculo');
 const { editarVehiculo } = require('../controladores/vehiculos/editarVehiculo');
-
 const { eliminarVehiculo } = require('../controladores/vehiculos/eliminarVehiculo');
 const { marcarVendido } = require("../controladores/vehiculos/marcarVendido");
 

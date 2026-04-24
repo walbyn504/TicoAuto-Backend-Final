@@ -1,8 +1,9 @@
-
+// Servicio para consultar la validez de la cédula en el padrón nacional
 const axios = require("axios");
 
 const consultarCedula = async (cedula) => {
   try {
+    // Realiza una solicitud al servidor del padrón
     const response = await axios.get(`http://localhost:8000/cedula/${cedula}`);
     return response.data;
   } catch (error) {

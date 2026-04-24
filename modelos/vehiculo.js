@@ -1,3 +1,5 @@
+// Modelo para los vehículos disponibles en el sistema, con detalles como marca...
+// Y referencia al usuario que publicó el vehículo.
 const mongoose = require('mongoose');
 
 const vehiculoSchema = new mongoose.Schema({

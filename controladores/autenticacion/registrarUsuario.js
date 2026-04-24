@@ -1,10 +1,11 @@
+// Valida los datos, verifica la cédula y el correo, encripta la contraseña, y envía un correo de verificación.
 const usuario = require('../../modelos/usuario');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { consultarCedula } = require('../../servicios/padronServicio');
-
 const enviarCorreoVerificacion = require('../../servicios/correoServicio');
 
+// Valida contraseña
 const validarContrasenna = (contrasenna) => {
     const tieneMin = /[a-z]/.test(contrasenna);
     const tieneMay = /[A-Z]/.test(contrasenna);
@@ -15,6 +16,7 @@ const validarContrasenna = (contrasenna) => {
     return tieneMin && tieneMay && tieneNumero && tieneEspecial && largoMinimo;
 };
 
+// Valida los datos del resgitro
 const validarDatosRegistro = ({ cedula, telefono, correo, contrasenna }) => {
     if (
         !cedula || !cedula.trim() ||
@@ -25,21 +27,25 @@ const validarDatosRegistro = ({ cedula, telefono, correo, contrasenna }) => {
         return "Todos los campos son obligatorios.";
     }
 
+    // valida cédula
     const regexCedula = /^\d{9}$/;
     if (!regexCedula.test(cedula.trim())) {
         return "La cédula debe tener exactamente 9 dígitos.";
     }
 
+    // Valida formato del correo
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regexCorreo.test(correo.trim())) {
         return "El formato del correo no es válido.";
     }
 
+    // Valida teléfono (al menos 8 dígitos)
     const regexTelefono = /^[0-9]{8,}$/;
     if (!regexTelefono.test(telefono.trim())) {
         return "El teléfono debe tener al menos 8 dígitos.";
     }
 
+    // Valida contraseña
     if (!validarContrasenna(contrasenna.trim())) {
         return "La contraseña debe tener al menos 8 caracteres, incluir mayúscula, minúscula, número y carácter especial.";
     }
@@ -47,10 +53,12 @@ const validarDatosRegistro = ({ cedula, telefono, correo, contrasenna }) => {
     return null;
 };
 
+// Registra el nuevo usuario, valida los datos, encripta la contraseña y envía el correo de verificación.
 const registrarUsuario = async (req, res) => {
-    const { cedula, telefono, correo, contrasenna } = req.body;
+    const { cedula, telefono, correo, contrasenna } = req.body; // Obtiene los datos del cuerpo de la solicitud
 
     try {
+        // Valida los datos del registro
         const errorValidacion = validarDatosRegistro({
             cedula,
             telefono,
@@ -73,7 +81,7 @@ const registrarUsuario = async (req, res) => {
             });
         }
 
-        // Verificar que el correo y la cédula no estén ya registrados
+        // Verificar que el correo no este ya registrados
         const usuarioExistenteCorreo = await usuario.findOne({ 
             correo: correo.trim().toLowerCase() 
         });
@@ -84,6 +92,7 @@ const registrarUsuario = async (req, res) => {
             });
         }
 
+        // Verificar que la cédula no este ya registrada
         const usuarioExistenteCedula = await usuario.findOne({
             cedula: cedula.trim()
         });
@@ -94,7 +103,7 @@ const registrarUsuario = async (req, res) => {
             });
         }
 
-        // Encriptar la contraseña
+        // Encripta la contraseña
         const hashedContrasenna = await bcrypt.hash(contrasenna.trim(), 10);
         
         // Generar token de verificación
@@ -113,12 +122,13 @@ const registrarUsuario = async (req, res) => {
             tokenVerificacion: hashedToken
         });
 
-        const usuarioGuardado = await nuevoUsuario.save();
+        const usuarioGuardado = await nuevoUsuario.save(); // Guarda el nuevo usuario en la base de datos
 
 
-        // Enviar correo de verificación
+        // Genera el enlace de verificación con el token
         const linkVerificacion = `http://localhost:5500/html/usuario/verificacion.html?token=${encodeURIComponent(rawToken)}`;
 
+        // Envía el token de verificación al correo del usuario
         await enviarCorreoVerificacion(
             usuarioGuardado.correo,
             usuarioGuardado.nombre,

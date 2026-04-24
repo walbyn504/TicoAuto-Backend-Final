@@ -1,8 +1,9 @@
+// Validar que el usuario autenticado sea el dueño del vehículo antes de marcarlo como vendido
 const Vehiculo = require('../../modelos/vehiculo');
 
 const marcarVendido = async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = req.params.id; // Obtiene el ID del vehículo de los parámetros de la ruta
 
         // Verificar usuario autenticado
         if (!req.usuario) {
@@ -11,9 +12,10 @@ const marcarVendido = async (req, res) => {
             });
         }
 
-        // Buscar vehículo
+        // Buscar vehículo por su ID
         const vehiculo = await Vehiculo.findById(id);
 
+        // Si no encuentra el vehículo, devuelve mensaje de error
         if (!vehiculo) {
             return res.status(404).json({
                 message: "Vehículo no encontrado"
@@ -34,7 +36,7 @@ const marcarVendido = async (req, res) => {
             });
         }
 
-        // Actualizar estado
+        // Actualizar estado a vendido
         vehiculo.estado = "Vendido";
         await vehiculo.save();
 

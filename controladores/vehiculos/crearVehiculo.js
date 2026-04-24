@@ -1,19 +1,24 @@
+// Valida los datos del vehículo, la autenticación del usuario y la imagen del vehículo, 
+// luego guarda el vehículo en la base de datos.
 const Vehiculo = require('../../modelos/vehiculo');
 
 const crearVehiculo = async (req, res) => {
     try {
+        //Valida que se haya subido una imagen y que el usuario esté autenticado
         if (!req.file) {
             return res.status(400).json({
                 message: "Debe subir una imagen"
             });
         }
 
+        // Verifica que el usuario esté autenticado
         if (!req.usuario) {
             return res.status(401).json({
                 message: "Usuario no autenticado"
             });
         }
 
+        //Valida los campos del vehículo
         const marca = req.body.marca?.trim();
         const modelo = req.body.modelo?.trim();
         const anno = parseInt(req.body.anno);
@@ -23,24 +28,28 @@ const crearVehiculo = async (req, res) => {
         const transmision = req.body.transmision;
         const condicion = req.body.condicion;
 
+        // Valida que todos los campos requeridos estén presentes
         if (!marca || !modelo || !color || !combustible || !transmision || !condicion) {
             return res.status(400).json({
                 message: "Todos los campos son obligatorios"
             });
         }
 
+        // Valida que el año y el precio sean números válidos
         if (isNaN(anno) || anno < 0) {
             return res.status(400).json({
                 message: "El año debe ser un número válido mayor o igual a 0"
             });
         }
 
+        // Valida que el precio sea un número válido
         if (isNaN(precio) || precio < 0) {
             return res.status(400).json({
                 message: "El precio debe ser un número válido mayor o igual a 0"
             });
         }
 
+        // Valida que el combustible, la transmisión y la condición sean valores válidos
         const combustiblesValidos = ['Gasolina', 'Disel', 'Gas'];
         const transmisionesValidas = ['Manual', 'Automatico'];
         const condicionesValidas = ['Nuevo', 'Usado'];
@@ -63,6 +72,7 @@ const crearVehiculo = async (req, res) => {
             });
         }
 
+        // Si pasa todas las validaciones, crea el vehículo
         const vehiculo = new Vehiculo({
             marca,
             modelo,
@@ -76,7 +86,7 @@ const crearVehiculo = async (req, res) => {
             usuario: req.usuario.id
         });
 
-        const vehiculoCreado = await vehiculo.save();
+        const vehiculoCreado = await vehiculo.save(); // Guarda el vehículo en la base de datos
 
         res
             .status(201)
