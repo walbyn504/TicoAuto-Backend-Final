@@ -20,7 +20,7 @@ const registrarUsuarioGoogle = async (req, res) => {
             return res.status(400).json({ message: "Cédula inválida" });
         }
 
-        // Verifica el token de Google y obtiene el correo y googleIdd
+        // Utiliza el servicio de google para verificar
         const { correo, googleId } = await verificarGoogleToken(credential);
 
         // Consulta que la cédula exista en el padrón
