@@ -1,5 +1,6 @@
-// Valida los datos, verifica el toeken de google, consulta el padrón, 
-// crea el usuario y envía el correo de verificación.
+
+/*Valida los datos, verifica el token de google, consulta el padrón, 
+crea el usuario y envía el correo de verificación.*/
 const usuario = require('../../modelos/usuario');
 const { consultarCedula } = require('../../servicios/padronServicio');
 const { verificarGoogleToken } = require('../../servicios/googleServicio');

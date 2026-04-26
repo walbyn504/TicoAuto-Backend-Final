@@ -1,5 +1,5 @@
+
 // Maneja la lógica para consultar datos de una cédula en el padrón
-//Valida el formato de la cédula y consulta los datos asociados a esa cédula en el padrón
 const { consultarCedula } = require('../../servicios/padronServicio');
 
 // Valida el formato de la cédula
@@ -23,7 +23,7 @@ const obtenerDatosCedula = async (req, res) => {
             });
         }
 
-        return res.status(200).json(persona); // Dveuelve los datos de la persona asociada a la cédula
+        return res.status(200).json(persona); // Devuelve los datos de la persona asociada a la cédula
 
     } catch (error) {
         return res.status(500).json({

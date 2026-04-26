@@ -1,4 +1,6 @@
-// Valida los datos, verifica la cédula y el correo, encripta la contraseña, y envía un correo de verificación.
+
+/* Valida los datos, verifica la cédula y el correo, encripta la contraseña, 
+y envía un correo de verificación.*/
 const usuario = require('../../modelos/usuario');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -16,7 +18,7 @@ const validarContrasenna = (contrasenna) => {
     return tieneMin && tieneMay && tieneNumero && tieneEspecial && largoMinimo;
 };
 
-// Valida los datos del resgitro
+// Valida los datos del registro
 const validarDatosRegistro = ({ cedula, telefono, correo, contrasenna }) => {
     if (
         !cedula || !cedula.trim() ||

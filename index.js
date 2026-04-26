@@ -37,7 +37,6 @@ app.use('/api', require('./rutas/vehiculos'));
 app.use('/api', require('./rutas/autenticacion'));
 app.use('/api', require('./rutas/pregunta'));
 app.use('/api', require('./rutas/respuestas'));
-app.use('/api', require('./rutas/conversacion'));
 app.use('/api', require('./rutas/padron'));
 
 

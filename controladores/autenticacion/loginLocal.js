@@ -55,7 +55,7 @@ const loginLocal = async (req, res) => {
             });
         }
 
-        // Compara la contraseña digitada con la conytraseña de la base de datos
+        // Compara la contraseña digitada con la contraseña de la base de datos
         const esValida = await bcrypt.compare(
             contrasenna.trim(),
             usuarioEncontrado.contrasenna
