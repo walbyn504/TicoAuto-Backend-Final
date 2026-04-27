@@ -1,5 +1,7 @@
-// Resolvers de GraphQL para manejar las operaciones sobre vehículos.
-// Incluye la búsqueda de vehículos, detalles del vehículo, gestión de vehículos del usuario, y edición de vehículos.
+
+/* Resolvers de GraphQL para manejar las operaciones sobre vehículos.
+Incluye la búsqueda de vehículos, detalles del vehículo, gestión de vehículos del usuario, y edición de vehículos.*/
+
 const Vehiculo = require('../../modelos/vehiculo');
 const validarFiltroVehiculos = require('../../validaciones/vehiculos/filtroVehiculos');
 

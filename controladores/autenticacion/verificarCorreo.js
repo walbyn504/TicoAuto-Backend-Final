@@ -31,13 +31,6 @@ const verificarCorreo = async (req, res) => {
             });
         }
 
-        // Verificar si el usuario ya está activo
-        if (usuarioEncontrado.estado === 'activo') {
-            return res.status(200).json({
-                message: "El usuario ya está verificado."
-            });
-        }
-
         // Activar el usuario
         usuarioEncontrado.estado = 'activo';
         usuarioEncontrado.tokenVerificacion = null;

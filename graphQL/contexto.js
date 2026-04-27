@@ -1,5 +1,7 @@
-// Contexto de autenticación para GraphQL. Verifica el token JWT 
-// en las cabeceras de la solicitud y proporciona los datos del usuario autenticado.
+
+/* Contexto de autenticación para GraphQL. Verifica el token JWT en los headers de la solicitud 
+y proporciona los datos del usuario autenticado.*/
+
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -9,7 +11,7 @@ const context = ({ req }) => {
         return { usuario: null };
     }
 
-    const authHeader = req.headers['authorization']; // Obtiene el token de las cabezeras de la solicitud
+    const authHeader = req.headers['authorization']; // Obtiene el token de las headers de la solicitud
 
     // Si no hay un token, devuelve un usuario nulo
     if (!authHeader) {

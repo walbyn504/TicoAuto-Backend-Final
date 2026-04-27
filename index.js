@@ -10,11 +10,9 @@ const { ApolloServer } = require('@apollo/server');
 // Integración de Apollo Server con Express
 const { expressMiddleware } = require('@as-integrations/express5');
 
-
 const typeDefs = require('./graphql/esquema');
 const resolvers = require('./graphql/resolvers');
 const contexto = require('./graphql/contexto');
-
 
 
 //Creación del servidor
@@ -32,7 +30,8 @@ app.use(cors({
 //Ruta para acceder a las imágenes
 app.use('/imagenes', express.static('imagenes'));
 
-//Rutas
+
+//Rutas de Rest para vehículos, autenticación, preguntas, respuestas y padron
 app.use('/api', require('./rutas/vehiculos'));
 app.use('/api', require('./rutas/autenticacion'));
 app.use('/api', require('./rutas/pregunta'));

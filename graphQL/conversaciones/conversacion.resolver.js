@@ -1,12 +1,15 @@
-// Resolver pa// Resolvers de GraphQL para manejar las conversaciones entre usuarios interesados y vendedores. 
-// Permite obtener preguntas y respuestas relacionadas con los vehículos de un usuario, 
-// tanto para el usuario como para el vendedor.
+
+/*Resolvers de GraphQL para manejar las conversaciones entre usuarios interesados y vendedores. 
+Permite obtener preguntas y respuestas relacionadas con los vehículos de un usuario, 
+tanto para el usuario como para el vendedor.*/
+
 const Pregunta = require("../../modelos/pregunta");
 const Respuesta = require("../../modelos/respuesta");
 const Vehiculo = require("../../modelos/vehiculo");
 
 const conversacionResolvers = {
-    // Conversión del campo ID de Pregunta  a String para GraphQL
+
+    // Conversión del campo ID de Pregunta a String 
     Pregunta: {
         id: (doc) => String(doc._id)
     },
@@ -19,6 +22,7 @@ const conversacionResolvers = {
     },
 
     Query: {
+
         // Obtiene las conversaciones del usuario (preguntas realizadas por él)
         obtenerMisConversaciones: async (_, __, contexto) => {
             try {
@@ -30,8 +34,7 @@ const conversacionResolvers = {
                     throw new Error("Usuario no autenticado");
                 }
 
-                // Busca las preguntas realizadas por el usuario autenticado
-                // Junto a sus posibles respuestas
+                // Busca las preguntas realizadas por el usuario autenticado junto a sus posibles respuestas
                 const misPreguntas = await Pregunta.find({
                     usuario: userId
                 })
@@ -45,7 +48,7 @@ const conversacionResolvers = {
                     })
                     .sort({ fechaPregunta: -1 });
 
-                const resultado = []; // Almacens las preguntas junto a sus posibles respuestas
+                const resultado = []; // Almacena las preguntas junto a sus posibles respuestas
 
                 // Para cada pregunta, busca su respuesta (si existe) y se agrega al resultado
                 for (let i = 0; i < misPreguntas.length; i++) {
@@ -69,6 +72,8 @@ const conversacionResolvers = {
             }
         },
 
+
+        // Obtiene las conversaciones relacionadas a sus vehículos. 
         obtenerConversacionesDeMisVehiculos: async (_, __, contexto) => {
             try {
 
@@ -105,7 +110,7 @@ const conversacionResolvers = {
                             select: "_id nombre"
                         }
                     })
-                    .sort({ fechaPregunta: -1 });
+                    .sort({ fechaPregunta: -1 }); // Ordena más recientes primero
 
                 const resultado = []; // Almacena las preguntas junto a sus posibles respuestas
 

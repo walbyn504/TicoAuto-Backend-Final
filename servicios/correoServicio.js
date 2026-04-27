@@ -1,3 +1,4 @@
+
 // Función para enviar un correo de verificación de cuenta utilizando SendGrid.
 // La función incluye un mensaje en formato texto y HTML con un enlace de verificación.
 

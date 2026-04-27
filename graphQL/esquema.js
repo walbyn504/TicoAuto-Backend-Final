@@ -1,10 +1,14 @@
-// Definición de tipos GraphQL para la raíz y la integración de tipos específicos (vehículos y conversaciones). 
-const gql = String.raw;// Utiliza String.raw para definir el esquema GraphQL como un string
+
+
+// Une los tipos de vehículo y conversación en un único esquema
+
+const gql = String.raw;// Definir el esquema GraphQL como un string
 
 const vehiculoTypeDefs = require('./vehiculos/vehiculo.type.js');
 const conversacionTypeDefs = require('./conversaciones/conversacion.type.js');
 
-// Definición de la consulta raíz para GraphQL, con un tipo de consulta vacío
+
+// Crea un query base vacio para extenderlo en los otros tipos
 const rootTypeDefs = gql`
   type Query {
     _empty: String

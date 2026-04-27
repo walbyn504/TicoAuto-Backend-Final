@@ -109,8 +109,8 @@ const registrarUsuario = async (req, res) => {
         const hashedContrasenna = await bcrypt.hash(contrasenna.trim(), 10);
         
         // Generar token de verificación
-        const rawToken = crypto.randomBytes(32).toString('hex');
-        const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+        const tokenOriginal = crypto.randomBytes(32).toString('hex');
+        const hashedToken = crypto.createHash('sha256').update(tokenOriginal).digest('hex');
 
         const nuevoUsuario = new usuario({
             cedula: cedula.trim(),
@@ -128,7 +128,7 @@ const registrarUsuario = async (req, res) => {
 
 
         // Genera el enlace de verificación con el token
-        const linkVerificacion = `http://localhost:5500/html/usuario/verificacion.html?token=${encodeURIComponent(rawToken)}`;
+        const linkVerificacion = `http://localhost:5500/html/usuario/verificacion.html?token=${encodeURIComponent(tokenOriginal)}`;
 
         // Envía el token de verificación al correo del usuario
         await enviarCorreoVerificacion(
