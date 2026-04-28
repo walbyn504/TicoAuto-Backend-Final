@@ -1,43 +1,30 @@
 require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-// Servidor GraphQL
-const { ApolloServer } = require('@apollo/server');
-
-// Integración de Apollo Server con Express
-const { expressMiddleware } = require('@as-integrations/express5');
-
-const typeDefs = require('./graphql/esquema');
-const resolvers = require('./graphql/resolvers');
-const contexto = require('./graphql/contexto');
-
-
-//Creación del servidor
+// Creación del servidor
 const app = express();
 
-
-//middleswares
+// Middlewares
 app.use(bodyParser.json());
+
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH']
 }));
 
-
-//Ruta para acceder a las imágenes
+// Ruta para acceder a las imágenes
 app.use('/imagenes', express.static('imagenes'));
 
-
-//Rutas de Rest para vehículos, autenticación, preguntas, respuestas y padron
+// Rutas REST
 app.use('/api', require('./rutas/vehiculos'));
 app.use('/api', require('./rutas/autenticacion'));
 app.use('/api', require('./rutas/pregunta'));
 app.use('/api', require('./rutas/respuestas'));
 app.use('/api', require('./rutas/padron'));
-
 
 async function iniciarServidor() {
     try {
@@ -45,26 +32,9 @@ async function iniciarServidor() {
         await mongoose.connect(process.env.MONGO_URI);
         console.log('Conexión a la BD exitosa');
 
-        // Servidor Apollo GraphQL
-        const apolloServer = new ApolloServer({
-            typeDefs,
-            resolvers
-        });
-
-        await apolloServer.start();
-
-        app.use(
-            '/graphql',
-            express.json(),
-            expressMiddleware(apolloServer, {
-                context: async ({ req }) => contexto({ req })
-            })
-        );
-
-        // Inicialización del servidor
+        // Inicialización del servidor REST
         app.listen(process.env.PORT, () => {
-            console.log(`Servidor corriendo en puerto ${process.env.PORT}`);
-            console.log(`GraphQL disponible en http://localhost:${process.env.PORT}/graphql`);
+            console.log(`Servidor REST corriendo en puerto ${process.env.PORT}`);
         });
 
     } catch (error) {
