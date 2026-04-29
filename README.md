@@ -1,4 +1,4 @@
-# TicoAuto-Backend
+# TicoAuto-Backend REST API
 
 ## Descripción
 
@@ -21,7 +21,6 @@ El sistema utiliza una Arquitectura Orientada a Servicios (SOA) con un backend R
 - **SendGrid**: Para la verificación por correo electrónico.
 - **Google OAuth2**: Para autenticación mediante Google.
 - **Twilio**: Para el envío de mensajes SMS para 2FA.
-- **GraphQL**: Para consultas eficientes al backend.
 
 ---
 
@@ -46,8 +45,7 @@ El sistema utiliza una Arquitectura Orientada a Servicios (SOA) con un backend R
 - **Sistema de preguntas y respuestas**:
   - Los usuarios pueden realizar preguntas sobre los vehículos y recibir respuestas.
 
-- **Consultas GraphQL**:
-  - Servicio GraphQL que permite realizar consultas sobre los vehículos y otros datos.
+---
 
 ## Diagrama arquitectura de servicios
 
@@ -73,10 +71,12 @@ npm install
 
 Luego, Tienes que crear un archivo .env, donde van todas tus variables de entorno.
 
+---
+
 ### Ejemplo:
 
 ```bash
-PORT=5000
+PORT=3001
 MONGO_URI=mongodb://localhost:27001/auto
 JWT_SECRET=your_jwt_secret_key
 SENDGRID_API_KEY=your_sendgrid_api_key
@@ -85,4 +85,3 @@ TWILIO_AUTH_TOKEN=your_twilio_auth_token
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
-
