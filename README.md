@@ -2,9 +2,9 @@
 
 ## Descripción
 
-Este proyecto corresponde al backend de **TicoAuto**, una plataforma para la publicación y búsqueda de vehículos en venta. Los usuarios pueden registrarse, iniciar sesión, publicar vehículos, realizar búsquedas con filtros, y comunicarse mediante preguntas y respuestas asociadas a cada vehículo.
+Este proyecto corresponde al backend de **REST** de TicoAuto, una plataforma para la publicación y búsqueda de vehículos en venta. Los usuarios pueden registrarse, iniciar sesión, publicar vehículos; así mismo, comunicarse mediante preguntas y respuestas asociadas a cada vehículo.
 
-El sistema utiliza una Arquitectura Orientada a Servicios (SOA) con un backend REST y un frontend desacoplado. La autenticación y las validaciones de seguridad son gestionadas a través de JWT y 2FA.
+El sistema utiliza una Arquitectura Orientada a Servicios (SOA) con un backend REST. La autenticación y las validaciones de seguridad son gestionadas a través de JWT y 2FA.
 
 ---
 
@@ -36,11 +36,8 @@ El sistema utiliza una Arquitectura Orientada a Servicios (SOA) con un backend R
   - Integración con Google para login y registro.
 
 - **Gestión de vehículos**:
-  - Crear, leer, actualizar y eliminar vehículos.
+  - Crear, actualizar y eliminar vehículos.
   - Marcar vehículos como vendidos.
-  
-- **Filtros de búsqueda**:
-  - Búsqueda por marca, modelo, precio, año, y estado del vehículo.
 
 - **Sistema de preguntas y respuestas**:
   - Los usuarios pueden realizar preguntas sobre los vehículos y recibir respuestas.
